@@ -10,18 +10,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akashsoam.quiztruefalseapp.R;
+import com.akashsoam.quiztruefalseapp.model.QuizQuestion;
 import com.akashsoam.quiztruefalseapp.view.AnimeViewHolder;
 
 import java.util.List;
 
 public class CardStackAdapter extends RecyclerView.Adapter<AnimeViewHolder> {
     private Context mContext;
-    private List<String> mAnimeNames;
+    private List<QuizQuestion> mAnimeQuestions;
     private LayoutInflater mLayoutInflater;
 
-    public CardStackAdapter(Context context, List<String> animeNames) {
+    public CardStackAdapter(Context context, List<QuizQuestion> animeQuestions) {
         this.mContext = context;
-        this.mAnimeNames = animeNames;
+        this.mAnimeQuestions = animeQuestions;
         mLayoutInflater = LayoutInflater.from(mContext);
     }
 
@@ -34,23 +35,27 @@ public class CardStackAdapter extends RecyclerView.Adapter<AnimeViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull AnimeViewHolder holder, int position) {
-        holder.getTxtAnimeQuestion().setText(mAnimeNames.get(position));
+        holder.getTxtAnimeQuestion().setText(mAnimeQuestions.get(position).getQuestionText());
         holder.getImgButtonFalse().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"False is tapped", Toast.LENGTH_SHORT).show();
+                if (!mAnimeQuestions.get(position).isTrueAnswer())
+                    Toast.makeText(mContext, "✌️CORRECT ANSWER", Toast.LENGTH_SHORT).show();
+                else Toast.makeText(mContext, "🥲INCORRECT ANSWER", Toast.LENGTH_SHORT).show();
+
             }
         });
         holder.getImgButtonTrue().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"True is tapped", Toast.LENGTH_SHORT).show();
-            }
+                if (mAnimeQuestions.get(position).isTrueAnswer())
+                    Toast.makeText(mContext, "✌️CORRECT ANSWER", Toast.LENGTH_SHORT).show();
+                else Toast.makeText(mContext, "🥲INCORRECT ANSWER", Toast.LENGTH_SHORT).show();            }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mAnimeNames.size();
+        return mAnimeQuestions.size();
     }
 }
